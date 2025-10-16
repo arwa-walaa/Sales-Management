@@ -1,0 +1,955 @@
+{
+	"info": {
+		"_postman_id": "5ab2fe2e-acb6-437f-834b-2441f1ae6765",
+		"name": "Sales Management API",
+		"description": "Complete API collection for Multi-Branch Sales Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25594408",
+		"_collection_link": "https://grey-moon-197323.postman.co/workspace/981e6a52-8c85-4e79-8438-cd05ebd013d6/collection/25594408-5ab2fe2e-acb6-437f-834b-2441f1ae6765?action=share&source=collection_link&creator=25594408"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('auth_token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"arwa@gmail.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"type\": \"admin\"\n//   \"branch_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"arwa@gmail.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\",\n  \"type\": \"admin\"\n//   \"branch_id\": 1\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 15:20:15 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered successfully\",\n    \"user\": {\n        \"id\": 2,\n        \"name\": \"Test User\",\n        \"email\": \"arwa@gmail.com\",\n        \"type\": \"admin\",\n        \"branch\": null,\n        \"branch_id\": null,\n        \"created_at\": \"2025-10-15 15:20:15\"\n    },\n    \"token\": \"1|EHlFyJLj9ZiuCrDEEStWiRRtXI4eCyZUuO6a3GCy9a1e6716\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('auth_token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"arwa@gmail.com\",\n  \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 15:20:50 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login successful\",\n    \"user\": {\n        \"id\": 2,\n        \"name\": \"Test User\",\n        \"email\": \"arwa@gmail.com\",\n        \"type\": \"admin\",\n        \"branch\": null,\n        \"branch_id\": null,\n        \"created_at\": \"2025-10-15 15:20:15\"\n    },\n    \"token\": \"2|6Mx0GK7ZMV3w2MtIdZz1ozVlpTANE49EXz5WTWI3096d01f5\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Current User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/auth/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"auth",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 15:21:19 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"id\": 2,\n        \"name\": \"Test User\",\n        \"email\": \"arwa@gmail.com\",\n        \"type\": \"admin\",\n        \"branch\": null,\n        \"branch_id\": null,\n        \"created_at\": \"2025-10-15 15:20:15\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/auth/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 15:22:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Leads",
+			"item": [
+				{
+					"name": "List Leads with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/leads?status=new&branch_id=2&user_id=16",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"leads"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "new",
+									"description": "new, in_progress, closed"
+								},
+								{
+									"key": "branch_id",
+									"value": "2"
+								},
+								{
+									"key": "user_id",
+									"value": "16"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List Leads with Filters",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/leads",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"leads"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "new",
+											"disabled": true
+										},
+										{
+											"key": "branch_id",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "user_id",
+											"value": "6",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 16:20:12 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 7,\n            \"name\": \"lead3\",\n            \"phone\": \"1234567890\",\n            \"status\": \"new\",\n            \"user\": {\n                \"id\": 4,\n                \"name\": \"Seller User\",\n                \"email\": \"seller@gmail.com\",\n                \"type\": \"sales\",\n                \"branch_id\": 1,\n                \"created_at\": \"2025-10-15 15:30:23\"\n            },\n            \"branch\": {\n                \"id\": 1,\n                \"name\": \"Berge-Koss\",\n                \"city\": \"Darrelborough\",\n                \"created_at\": \"2025-10-15 15:27:35\"\n            },\n            \"user_id\": 4,\n            \"branch_id\": 1,\n            \"created_at\": \"2025-10-15 16:17:38\",\n            \"updated_at\": \"2025-10-15 16:17:38\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"lead1\",\n            \"phone\": \"1234567890\",\n            \"status\": \"new\",\n            \"user\": {\n                \"id\": 4,\n                \"name\": \"Seller User\",\n                \"email\": \"seller@gmail.com\",\n                \"type\": \"sales\",\n                \"branch_id\": 1,\n                \"created_at\": \"2025-10-15 15:30:23\"\n            },\n            \"branch\": {\n                \"id\": 1,\n                \"name\": \"Berge-Koss\",\n                \"city\": \"Darrelborough\",\n                \"created_at\": \"2025-10-15 15:27:35\"\n            },\n            \"user_id\": 4,\n            \"branch_id\": 1,\n            \"created_at\": \"2025-10-15 16:17:26\",\n            \"updated_at\": \"2025-10-15 16:17:26\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://127.0.0.1:8000/api/leads?page=1\",\n        \"last\": \"http://127.0.0.1:8000/api/leads?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/leads?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://127.0.0.1:8000/api/leads\",\n        \"per_page\": 15,\n        \"to\": 2,\n        \"total\": 2\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Lead",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"lead4 Doe\",\n  \"phone\": \"1234567890\",\n  \"branch_id\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/leads",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"leads"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Lead",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"lead4 Doe\",\n  \"phone\": \"1234567890\",\n  \"branch_id\": 1\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/leads",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"leads"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 16:11:36 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"name\": \"lead4 Doe\",\n    \"phone\": \"1234567890\",\n    \"status\": \"new\",\n    \"user\": {\n        \"id\": 6,\n        \"name\": \"seller2 User\",\n        \"email\": \"seller2@gmail.com\",\n        \"type\": \"sales\",\n        \"branch_id\": 1,\n        \"created_at\": \"2025-10-15 16:04:26\"\n    },\n    \"branch\": {\n        \"id\": 1,\n        \"name\": \"Berge-Koss\",\n        \"city\": \"Darrelborough\",\n        \"created_at\": \"2025-10-15 15:27:35\"\n    },\n    \"user_id\": 6,\n    \"branch_id\": 1,\n    \"created_at\": \"2025-10-15 16:11:36\",\n    \"updated_at\": \"2025-10-15 16:11:36\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Single Lead",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/leads/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"leads",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Single Lead",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/leads/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"leads",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 16:11:44 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"John Doe\",\n        \"phone\": \"1234567890\",\n        \"status\": \"new\",\n        \"user\": {\n            \"id\": 4,\n            \"name\": \"Seller User\",\n            \"email\": \"seller@gmail.com\",\n            \"type\": \"sales\",\n            \"branch_id\": 1,\n            \"created_at\": \"2025-10-15 15:30:23\"\n        },\n        \"branch\": {\n            \"id\": 1,\n            \"name\": \"Berge-Koss\",\n            \"city\": \"Darrelborough\",\n            \"created_at\": \"2025-10-15 15:27:35\"\n        },\n        \"user_id\": 4,\n        \"branch_id\": 1,\n        \"created_at\": \"2025-10-15 16:05:35\",\n        \"updated_at\": \"2025-10-15 16:05:35\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Lead",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"in_progress\",\n  \"name\":\"lead1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/leads/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"leads",
+								"6"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Lead",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"in_progress\",\n  \"name\":\"lead1\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8000/api/leads/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"leads",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 16:12:18 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "56"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"lead1\",\n        \"phone\": \"1234567890\",\n        \"status\": \"in_progress\",\n        \"user\": {\n            \"id\": 4,\n            \"name\": \"Seller User\",\n            \"email\": \"seller@gmail.com\",\n            \"type\": \"sales\",\n            \"branch_id\": 1,\n            \"created_at\": \"2025-10-15 15:30:23\"\n        },\n        \"branch\": {\n            \"id\": 1,\n            \"name\": \"Berge-Koss\",\n            \"city\": \"Darrelborough\",\n            \"created_at\": \"2025-10-15 15:27:35\"\n        },\n        \"user_id\": 4,\n        \"branch_id\": 1,\n        \"created_at\": \"2025-10-15 16:05:35\",\n        \"updated_at\": \"2025-10-15 16:12:18\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Lead",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/leads/4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"leads",
+								"4"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Lead",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8000/api/leads/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"leads",
+										"4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 15 Oct 2025 16:14:09 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Lead deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Branches",
+			"item": [
+				{
+					"name": "Get Branch Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/branches/1/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches",
+								"1",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Branch Cache (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/branches/1/clear-cache",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"branches",
+								"1",
+								"clear-cache"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{auth_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

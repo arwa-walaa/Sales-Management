@@ -21,6 +21,95 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## API Endpoints
+
+### Authentication
+
+- POST `api/auth/register`
+  - Body: JSON
+    - name (string, required)
+    - email (string, required, unique)
+    - password (string, required)
+    - type (string: "admin" | "sales", required)
+    - branch_id (int, required)
+  - 201 Response: `{ "message": "User registered successfully", "user": { ... }, "token": "..." }`
+
+- POST `api/auth/login`
+  - Body: JSON { email, password }
+  - 200 Response: `{ "message": "Login successful", "user": { ... }, "token": "..." }`
+  - 401 Response: `{ "message": "Invalid email or password" }`
+
+- POST `api/auth/logout` (auth required)
+  - 200 Response: `{ "message": "Logged out successfully" }`
+
+- GET `api/auth/me` (auth required)
+  - 200 Response: `{ "user": { ... } }`
+
+### Leads (auth required)
+
+- GET `api/leads`
+  - Query: `status`, `branch_id`, `user_id` (admin only), `per_page`
+  - 200 Response: Paginated list under `data` including `user` and `branch` relations
+
+- GET `api/leads/{lead}`
+  - 200 Response: Single lead resource with relations
+
+- POST `api/leads`
+  - Body: JSON { name, phone, branch_id }
+  - Behavior: Auto-assigns to next sales user (round-robin) and queues email
+  - 201 Response: `{ "message": "Lead created successfully", "lead": { id, name, phone, status, user_id, branch_id, user, branch } }`
+  - Errors: 403 unauthorized; 500 `{ "message": "Lead creation failed" }`
+
+- PUT `api/leads/{lead}`
+  - Body: JSON { name?, phone?, status?, user_id? (ignored for sales) }
+  - 200 Response: Updated lead resource
+  - Errors: 403 unauthorized; unexpected errors logged
+
+- DELETE `api/leads/{lead}`
+  - 200 Response: `{ "message": "Lead deleted successfully" }`
+
+### Branches (admin only, auth required)
+
+- GET `api/branches/{branch}/summary`
+  - 200 Response: `{ total_leads, new, in_progress, closed, top_sales: [ { user, leads } ] }`
+  - 403 Response: `{ "message": "You don't have permission to perform this action." }`
+
+- POST `api/branches/{branch}/clear-cache`
+  - Behavior: Clears summary cache and resets round-robin index for the branch
+  - 200 Response: `{ "message": "Branch cache cleared" }`
+  - Errors: 403 forbidden; 500 `{ "message": "Failed to clear cache" }`
+
+### Auth details
+
+- All protected routes use Laravel Sanctum bearer tokens.
+- Header: `Authorization: Bearer <token>`
+
+### Error responses
+
+- 401: Invalid credentials
+- 403: Forbidden (policies/gates)
+- 422: Validation errors (FormRequests)
+- 500: Server errors with message; details logged
+
+### Curl examples
+
+```bash
+# Login
+curl -X POST http://localhost/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"secret"}'
+
+# Create lead
+curl -X POST http://localhost/api/leads \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John Doe","phone":"1234567890","branch_id":1}'
+
+# Clear branch cache (admin)
+curl -X POST http://localhost/api/branches/1/clear-cache \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
