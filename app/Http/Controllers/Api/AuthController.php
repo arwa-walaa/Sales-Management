@@ -51,24 +51,34 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Invalid email or password',
+                ], 401);
+            }
+
+            // Delete old tokens
+            $user->tokens()->delete();
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
-                'message' => 'Invalid email or password',
-            ], 401);
+                'message' => 'Login successful',
+                'user' => new UserResource($user->load('branch')),
+                'token' => $token,
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Login failed', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'message' => 'Login failed',
+            ], 500);
         }
-
-        // Delete old tokens
-        $user->tokens()->delete();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login successful',
-            'user' => new UserResource($user->load('branch')),
-            'token' => $token,
-        ]);
     }
 
     /**

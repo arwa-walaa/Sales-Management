@@ -60,13 +60,21 @@ class BranchController extends Controller
      */
     public function clearCache(Request $request, Branch $branch): JsonResponse
     {
-        $this->authorize('admin');
+        try {
+            $this->authorize('admin');
 
-        Cache::forget("branch_summary_{$branch->id}");
+            Cache::forget("branch_summary_{$branch->id}");
 
-        // Reset round-robin index for this branch
-        app(\App\Services\LeadAssignmentService::class)->resetBranchRoundRobin($branch->id);
+            // Reset round-robin index for this branch
+            app(\App\Services\LeadAssignmentService::class)->resetBranchRoundRobin($branch->id);
 
-        return response()->json(['message' => 'Branch cache cleared'], 200);
+            return response()->json(['message' => 'Branch cache cleared'], 200);
+        } catch (\Throwable $e) {
+            \Log::error('Branch cache clear failed', [
+                'branch_id' => $branch->id,
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json(['message' => 'Failed to clear cache'], 500);
+        }
     }
 }

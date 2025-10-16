@@ -51,33 +51,42 @@ class LeadController extends Controller
      */
     public function store(StoreLeadRequest $request, LeadAssignmentService $assignmentService): JsonResponse
     {
-        
-        $this->authorize('create', Lead::class);
-
-        $assignedUser = $assignmentService->assignNextSalesUser((int) $request->branch_id);
-
-        $lead = Lead::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'branch_id' => $request->branch_id,
-            'user_id' => $assignedUser?->id,
-            'status' => 'new',
-        ]);
-
-        // Dispatch queued notification to assigned sales user (if any)
         try {
-            SendLeadAssignmentNotification::dispatch($lead->load(['user', 'branch']))->onQueue('default');
+        
+            $this->authorize('create', Lead::class);
+
+            $assignedUser = $assignmentService->assignNextSalesUser((int) $request->branch_id);
+
+            $lead = Lead::create([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'branch_id' => $request->branch_id,
+                'user_id' => $assignedUser?->id,
+                'status' => 'new',
+            ]);
+
+            // Dispatch queued notification to assigned sales user (if any)
+            try {
+                SendLeadAssignmentNotification::dispatch($lead->load(['user', 'branch']))->onQueue('default');
+            } catch (\Throwable $e) {
+                Log::error('Failed to dispatch SendLeadAssignmentNotification', [
+                    'lead_id' => $lead->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Lead created successfully',
+                'lead' => new LeadResource($lead->load(['user', 'branch'])),
+            ], 201);
         } catch (\Throwable $e) {
-            Log::error('Failed to dispatch SendLeadAssignmentNotification', [
-                'lead_id' => $lead->id,
+            Log::error('Lead creation failed', [
                 'error' => $e->getMessage(),
             ]);
+            return response()->json([
+                'message' => 'Lead creation failed',
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Lead created successfully',
-            'lead' => new LeadResource($lead->load(['user', 'branch'])),
-        ], 201);
     }
 
     /**
@@ -94,18 +103,26 @@ class LeadController extends Controller
      */
     public function update(UpdateLeadRequest $request, Lead $lead): LeadResource
     {
-        $this->authorize('update', $lead);
+        try {
+            $this->authorize('update', $lead);
 
-        $data = $request->only(['name', 'phone', 'status', 'user_id']);
+            $data = $request->only(['name', 'phone', 'status', 'user_id']);
 
-        // Prevent sales users from reassigning leads to others
-        if ($request->user()->isSales()) {
-            unset($data['user_id']);
+            // Prevent sales users from reassigning leads to others
+            if ($request->user()->isSales()) {
+                unset($data['user_id']);
+            }
+
+            $lead->update($data);
+
+            return new LeadResource($lead->fresh()->load(['user', 'branch']));
+        } catch (\Throwable $e) {
+            Log::error('Lead update failed', [
+                'lead_id' => $lead->id,
+                'error' => $e->getMessage(),
+            ]);
+            return new LeadResource($lead->fresh()->load(['user', 'branch']));
         }
-
-        $lead->update($data);
-
-        return new LeadResource($lead->fresh()->load(['user', 'branch']));
     }
 
     /**
