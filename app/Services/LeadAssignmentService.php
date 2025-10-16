@@ -54,15 +54,6 @@ class LeadAssignmentService
         Cache::forget($cacheKey);
     }
 
-    /**
-     * Get current round-robin position for a branch.
-     *
-     * @param int $branchId
-     * @return int
-     */
-    public function getCurrentIndex(int $branchId): int
-    {
-        $cacheKey = "branch_{$branchId}_round_robin_index";
-        return Cache::get($cacheKey, 0);
-    }
+  
+ 
 }

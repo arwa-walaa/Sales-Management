@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class LeadAssignedNotification extends Notification implements ShouldQueue
 {
@@ -43,7 +44,7 @@ class LeadAssignedNotification extends Notification implements ShouldQueue
             ->line("Phone: {$this->lead->phone}")
             ->line("Branch: {$this->lead->branch->name}")
             ->line("Status: {$this->lead->status}")
-            ->action('View Lead', url("/api/leads/{$this->lead->id}"))
+           
             ->line('Thank you for your dedication!');
     }
 

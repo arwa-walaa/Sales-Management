@@ -17,12 +17,12 @@ class LeadFactory extends Factory
             'name' => fake()->name(),
             'phone' => fake()->phoneNumber(),
             'status' => fake()->randomElement(['new', 'in_progress', 'closed']),
-            'user_id' => User::where('type', 'sales')->inRandomOrder()->first()?->id,
+            'user_id' => null,
             'branch_id' => Branch::inRandomOrder()->first()?->id,
         ];
     }
 
-    public function new(): static
+    public function statusNew(): static
     {
         return $this->state(fn (array $attributes) => [
             'status' => 'new',

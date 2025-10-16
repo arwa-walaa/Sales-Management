@@ -60,7 +60,7 @@ class LeadManagementTest extends TestCase
     {
         $response = $this->actingAs($this->admin, 'sanctum')
             ->postJson('/api/leads', [
-                'name' => 'John Doe',
+                'name' => 'Test Lead',
                 'phone' => '1234567890',
                 'branch_id' => $this->branch->id,
             ]);
@@ -79,7 +79,7 @@ class LeadManagementTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('leads', [
-            'name' => 'John Doe',
+            'name' => 'Test Lead',
             'phone' => '1234567890',
             'user_id' => $this->salesUser->id,
         ]);

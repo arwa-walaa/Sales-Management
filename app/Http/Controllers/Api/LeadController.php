@@ -8,9 +8,11 @@ use App\Http\Requests\UpdateLeadRequest;
 use App\Http\Resources\LeadCollection;
 use App\Http\Resources\LeadResource;
 use App\Models\Lead;
+use App\Jobs\SendLeadAssignmentNotification;
 use App\Services\LeadAssignmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LeadController extends Controller
 {
@@ -49,6 +51,7 @@ class LeadController extends Controller
      */
     public function store(StoreLeadRequest $request, LeadAssignmentService $assignmentService): JsonResponse
     {
+        
         $this->authorize('create', Lead::class);
 
         $assignedUser = $assignmentService->assignNextSalesUser((int) $request->branch_id);
@@ -61,10 +64,20 @@ class LeadController extends Controller
             'status' => 'new',
         ]);
 
-        return response()->json(
-            new LeadResource($lead->load(['user', 'branch'])),
-            201
-        );
+        // Dispatch queued notification to assigned sales user (if any)
+        try {
+            SendLeadAssignmentNotification::dispatch($lead->load(['user', 'branch']))->onQueue('default');
+        } catch (\Throwable $e) {
+            Log::error('Failed to dispatch SendLeadAssignmentNotification', [
+                'lead_id' => $lead->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Lead created successfully',
+            'lead' => new LeadResource($lead->load(['user', 'branch'])),
+        ], 201);
     }
 
     /**

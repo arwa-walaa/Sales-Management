@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendLeadAssignmentNotification implements ShouldQueue
 {
@@ -29,8 +30,16 @@ class SendLeadAssignmentNotification implements ShouldQueue
      */
     public function handle(): void
     {
-        if ($this->lead->user) {
-            $this->lead->user->notify(new LeadAssignedNotification($this->lead));
+        try {
+            if ($this->lead->user) {
+                $this->lead->user->notify(new LeadAssignedNotification($this->lead));
+            } 
+        } catch (\Throwable $e) {
+            Log::error('Error while sending LeadAssignedNotification', [
+                'lead_id' => $this->lead->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e; // rethrow so the job can be retried
         }
     }
 }
